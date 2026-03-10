@@ -4,8 +4,8 @@ function lista_combo_cidades($id = null)
 	$output = '';
 
 	$user = "root";
-	$host = "localhost";
-	$password = "Root@1234";
+	$host = "127.0.0.1";
+	$password = "";
 	$dbName = "treinamento";
 
     $conn = new mysqli($host, $user, $password, $dbName);

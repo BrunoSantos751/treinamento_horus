@@ -9,8 +9,8 @@ media="screen" />
 $id = $nome = $endereco = $bairro = $telefone = $email = $id_cidade = '';
 if (!empty($_REQUEST['action'])) {
 $user = "root";
-$host = "localhost";
-$password = "Root@1234";
+$host = "127.0.0.1";
+$password = "";
 $dbName = "treinamento";
 
 $conn = new mysqli($host, $user, $password, $dbName);
@@ -62,6 +62,9 @@ print ($result) ? 'Registro salvo com sucesso' : $conn->error;
 }
 ?>
 <body>
+    <button onclick="window.location='pessoa_list.php'">
+        <istyle='width:17px'> Voltar
+    </button>
 <form enctype="multipart/form-data" method="post" action="pessoa_form.php?
 action=save">
 <label>Código</label>

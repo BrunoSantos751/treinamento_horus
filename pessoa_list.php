@@ -8,8 +8,8 @@
 <body>
 <?php
 $user = "root";
-$host = "localhost";
-$password = "Root@1234";
+$host = "127.0.0.1";
+$password = "";
 $dbName = "treinamento";
 
 $conn = new mysqli($host, $user, $password, $dbName);
