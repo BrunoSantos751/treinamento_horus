@@ -8,7 +8,7 @@ function lista_combo_cidades($id = null)
 	$password = "";
 	$dbName = "treinamento";
 
-    $conn = new mysqli($host, $user, $password, $dbName);
+	$conn = new mysqli($host, $user, $password, $dbName);
 
 	if ($conn->connect_error) {
 		// Falha na conexão — retorna lista vazia
@@ -26,7 +26,6 @@ function lista_combo_cidades($id = null)
 			$output .= "<option value=\"{$row_id}\"{$check}>{$row_nome}</option>\n";
 		}
 	}
-
 
 	return $output;
 }
