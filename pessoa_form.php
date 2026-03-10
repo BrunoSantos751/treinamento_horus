@@ -1,22 +1,23 @@
 <?php
-require_once 'db/pessoa_db.php';
+require_once 'classes/Pessoa.php';
+require_once 'classes/Cidade.php';
 if (!empty($_REQUEST['action'])) {
-    if ($_REQUEST['action'] == 'edit') {
-        $id = (int) $_GET['id'];
-        $pessoa = get_pessoa($id);
+    try {
+        if ($_REQUEST['action'] == 'edit') {
+            $id = (int) $_GET['id'];
+            $pessoa = Pessoa::find($id);
+        }
+        else if ($_REQUEST['action'] == 'save') {
+            $pessoa = $_POST;
+            Pessoa::save($pessoa);
+            print "Pessoa salva com sucesso";
+        }
     }
-    else if ($_REQUEST['action'] == 'save') {
-        $pessoa = $_POST;
-        if (empty($_POST['id'])) {
-$pessoa['id'] = get_next_pessoa();
-$result = insert_pessoa($pessoa);
-} else {
-    $result = update_pessoa($pessoa);
+    catch (Exception $e) {
+    print $e->getMessage();
+    }
 }
-print ($result) ? 'Registro salvo com sucesso' : 'Problemas ao salvar';
-}
-}
-else {
+else{
     $pessoa = [];
     $pessoa['id'] = '';
     $pessoa['nome'] = '';
@@ -26,7 +27,6 @@ else {
     $pessoa['email'] = '';
     $pessoa['id_cidade'] = '';
 }
-require_once 'lista_combo_cidades.php';
 $form = file_get_contents('html/form.html');
 $form = str_replace('{id}', $pessoa['id'], $form);
 $form = str_replace('{nome}', $pessoa['nome'], $form);
@@ -35,6 +35,11 @@ $form = str_replace('{bairro}', $pessoa['bairro'], $form);
 $form = str_replace('{telefone}', $pessoa['telefone'], $form);
 $form = str_replace('{email}', $pessoa['email'], $form);
 $form = str_replace('{id_cidade}', $pessoa['id_cidade'], $form);
-$form = str_replace('{cidades}', lista_combo_cidades( $pessoa['id_cidade'] ),
-$form);
+$cidades = '';
+foreach (Cidade::all() as $cidade) {
+    $check = ($cidade['id'] == $pessoa['id_cidade']) ? 'selected=1' : '';
+    $cidades .= "<option $check value='{$cidade['id']}'> {$cidade['nome']}
+    </option>\n";
+}
+$form = str_replace('{cidades}', $cidades, $form);
 print $form;

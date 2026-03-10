@@ -1,0 +1,82 @@
+<?php
+class Pessoa {
+    public static function save($pessoa) {
+           $conn = new PDO("mysql:host=127.0.0.1;dbname=treinamento;charset=utf8", // DSN
+        "root",      // usuário
+        ""            // senha
+        );
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        if (empty($pessoa['id'])) {
+            $result = $conn->query("SELECT max(id) as next FROM pessoa");
+            $row = $result->fetch();
+            $pessoa['id'] = (int) $row['next'] +1;
+            $sql = "INSERT INTO pessoa (id, nome, endereco, bairro,
+            telefone, email, id_cidade)
+            VALUES ( '{$pessoa['id']}', '{$pessoa['nome']}',
+            '{$pessoa['endereco']}',
+            '{$pessoa['bairro']}', '{$pessoa['telefone']}',
+            '{$pessoa['email']}', '{$pessoa['id_cidade']}'
+            )";
+        }
+        else {
+            $sql = "UPDATE pessoa SET nome = '{$pessoa['nome']}',
+            endereco = '{$pessoa['endereco']}',
+            bairro = '{$pessoa['bairro']}',
+            telefone = '{$pessoa['telefone']}',
+            email = '{$pessoa['email']}',
+            id_cidade = '{$pessoa['id_cidade']}'
+            WHERE id = '{$pessoa['id']}'";
+        }
+        return $conn->query($sql);
+    }
+    public static function find($id) {
+        $conn = new PDO("mysql:host=127.0.0.1;dbname=treinamento;charset=utf8", "root", "");
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $result = $conn->query("SELECT * FROM pessoa WHERE id='{$id}'");
+        return $result->fetch();
+    }
+    public static function all() {
+        $conn = new PDO("mysql:host=127.0.0.1;dbname=treinamento;charset=utf8", "root", "");
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $result = $conn->query("SELECT * FROM pessoa");
+        return $result->fetchAll();
+    }
+    public static function delete($id) {
+        $conn = new PDO("mysql:host=127.0.0.1;dbname=treinamento;charset=utf8", "root", "");
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        return $conn->query("DELETE FROM pessoa WHERE id='{$id}'");
+    }
+    /*
+    public static function save2($pessoa) {
+        $conn = new PDO("mysql:host=127.0.0.1;dbname=treinamento;charset=utf8", "root", "");
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        if (empty($pessoa['id'])) {
+            $result = $conn->query("SELECT max(id) as next FROM pessoa");
+            $row = $result->fetch();
+            $pessoa['id'] = (int) $row['next'] +1;
+            $sql = "INSERT INTO pessoa (id, nome, endereco, bairro,
+            telefone, email, id_cidade)
+            VALUES ( :id, :nome, :endereco, :bairro,
+            :telefone, :email, :id_cidade
+            )";
+        }
+        else {
+            $sql = "UPDATE pessoa SET nome = :nome,
+            endereco = :endereco,
+            bairro = :bairro,
+            telefone = :telefone,
+            email = :email,
+            id_cidade = :id_cidade
+            WHERE id = :id";
+        }
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue(':id', $pessoa['id']);
+        $stmt->bindValue(':nome', $pessoa['nome']);
+        $stmt->bindValue(':endereco', $pessoa['endereco']);
+        $stmt->bindValue(':bairro', $pessoa['bairro']);
+        $stmt->bindValue(':telefone', $pessoa['telefone']);
+        $stmt->bindValue(':email', $pessoa['email']);
+        $stmt->bindValue(':id_cidade', $pessoa['id_cidade']);
+        return $stmt->execute();
+    }*/
+}
