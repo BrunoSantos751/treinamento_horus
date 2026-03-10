@@ -1,11 +1,23 @@
 <?php
 class Pessoa {
+    private static $conn;
+    public static function getConnection() {
+    if (empty(self::$conn)) {
+    $conexao = parse_ini_file( 'config/livro.ini');
+    $host = $conexao['host'];
+    $name = $conexao['name'];
+    $user = $conexao['user'];
+    $pass = $conexao['pass'];
+    self::$conn = new PDO("mysql:host={$host};dbname={$name};user={$user};password={$pass}");
+    self::$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    }
+    return self::$conn;
+    }    
+
+
     public static function save($pessoa) {
-           $conn = new PDO("mysql:host=127.0.0.1;dbname=treinamento;charset=utf8", // DSN
-        "root",      // usuário
-        ""            // senha
-        );
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $conn = self::getConnection();
+
         if (empty($pessoa['id'])) {
             $result = $conn->query("SELECT max(id) as next FROM pessoa");
             $row = $result->fetch();
@@ -30,20 +42,17 @@ class Pessoa {
         return $conn->query($sql);
     }
     public static function find($id) {
-        $conn = new PDO("mysql:host=127.0.0.1;dbname=treinamento;charset=utf8", "root", "");
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $conn = self::getConnection();
         $result = $conn->query("SELECT * FROM pessoa WHERE id='{$id}'");
         return $result->fetch();
     }
     public static function all() {
-        $conn = new PDO("mysql:host=127.0.0.1;dbname=treinamento;charset=utf8", "root", "");
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $conn = self::getConnection();
         $result = $conn->query("SELECT * FROM pessoa");
         return $result->fetchAll();
     }
     public static function delete($id) {
-        $conn = new PDO("mysql:host=127.0.0.1;dbname=treinamento;charset=utf8", "root", "");
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $conn = self::getConnection();
         return $conn->query("DELETE FROM pessoa WHERE id='{$id}'");
     }
 }
