@@ -13,3 +13,7 @@ if (!empty($method) AND (method_exists($classe, $method))) {
 }
 $pagina->show();
 }
+else {
+    $pagina = new PessoaList();
+    $pagina->show();
+}
