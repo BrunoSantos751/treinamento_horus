@@ -1,9 +1,5 @@
 <?php
 class Estado {
-    public $id;
-    public $nome;
-    public $sigla;
-
     private static $conn;
     public static function getConnection() {
     if (empty(self::$conn)) {
@@ -28,11 +24,9 @@ class Estado {
         $stmt->execute();
     }
     public static function all() {
-        $sql = "SELECT * FROM estado";
-        $db = self::getConnection();
-        $stmt = $db->prepare($sql);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_CLASS, 'Estado');
+        $conn = self::getConnection();
+        $result = $conn->query("SELECT * FROM estado");
+        return $result->fetchAll();
     }
     public static function delete($id) {
         $sql = "DELETE FROM estado WHERE id = {$id}";
